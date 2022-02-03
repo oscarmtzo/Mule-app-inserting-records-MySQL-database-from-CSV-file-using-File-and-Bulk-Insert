@@ -124,7 +124,7 @@ VALUES (:actor_id, :first_name, :last_name, :last_update)]]></db:sql>
 ```
 - The 2 dot notation followed by a placeholder like this: `:actor_id`, is a sample for store data from the JSON format for every record, all this intended for the *Bulk Insert* connector to use it and write all new info to database.
 
-*The result for this Bulk Insert Operation is 10 new records written to the database*
+*The result for this Bulk Insert Operation is 10 new records written to the database:*
 ```
 -- Before Bulk Operation
 200 row(s) returned
