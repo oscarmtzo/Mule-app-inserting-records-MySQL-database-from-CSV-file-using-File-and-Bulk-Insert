@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="csv_input_dataType" format="csv">
+      <types:shape format="weave" example="examples/csv-input-data.csv"><![CDATA[%dw 2.0
+
+type csv_input_dataType = Array<{|  actorId: Number,   " firstName": String,   " lastName": String,   " lastUpdate": Date|}> {"isQuotedString": "false",
+"header": "true",
+"headerLineNumber": "0"}
+
+]]></types:shape>
+      <types:properties>
+        <types:property name="headerLineNumber" value="0"/>
+        <types:property name="header" value="true"/>
+        <types:property name="isQuotedString" value="false"/>
+      </types:properties>
+    </types:type>
+    <types:type name="json-output-metadata" format="json">
+      <types:shape format="weave" example="examples/json-output-data.json"><![CDATA[%dw 2.0
+
+type json_output_metadata = Array<{|  actor_id: Number {"typeId": "int"},   first_name: String,   last_name: String,   last_update: String|}> {"example": "[{\\\"actor_id\\\":1,\\\"first_name\\\":\\\"Nick\\\",\\\"last_name\\\":\\\"Davis\\\",\\\"last_update\\\":\\\"2006-02-15 04:34:33\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#b8b30111-4755-4126-b205-e2e69dba3f34">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="csv_input_dataType"/>
+        </types:message>
+      </types:input-event>
+      <types:output-event>
+        <types:message>
+          <types:payload type="json-output-metadata"/>
+        </types:message>
+      </types:output-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

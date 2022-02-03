@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:file="http://www.mulesoft.org/schema/mule/file"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<file:config name="File_Config" doc:name="File Config" doc:id="b3d61ed7-b5de-4021-a9b7-d4f639f80bb3" />
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="fab42643-485c-46f1-8892-b5de58fce941" >
+		<db:my-sql-connection host="localhost" port="3306" user="test" password="newpassword" database="sakila" />
+	</db:config>
+	<flow name="ftp-insert-sql-from-csvFlow" doc:id="e1424d80-53aa-4e52-9691-f7315bf6492c" >
+		<scheduler doc:name="Scheduler" doc:id="5ded1c31-8e3a-424a-a9bf-05b23f0b01c7" >
+			<scheduling-strategy >
+				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
+			</scheduling-strategy>
+		</scheduler>
+		<file:read doc:id="57f7e325-93ae-4ac3-b820-af569025ad6e" doc:name="Actors CSV File Read" path="C:\Users\oscarmartinez\Cursos\Mulesoft-Udemy\Udemy-Mulesoft-WorkSpace\ftp-insert-sql-from-csv\sample-read-dir\actors.csv" config-ref="File_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="b8b30111-4755-4126-b205-e2e69dba3f34" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ( payload01 , indexOfPayload01 ) -> {
+	actor_id: payload01.actorId,
+	first_name: payload01." firstName",
+	last_name: payload01." lastName",
+	last_update: payload01." lastUpdate" as String
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<db:bulk-insert doc:name="Bulk insert" doc:id="bab02094-8217-4392-abde-3ae4e56c3cc2" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO actor(actor_id, first_name, last_name, last_update) 
+VALUES (:actor_id, :first_name, :last_name, :last_update)]]></db:sql>
+		</db:bulk-insert>
+	</flow>
+</mule>
