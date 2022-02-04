@@ -16,7 +16,6 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<fixed-frequency frequency="1" timeUnit="MINUTES"/>
 			</scheduling-strategy>
 		</scheduler>
-		<file:read doc:id="57f7e325-93ae-4ac3-b820-af569025ad6e" doc:name="Actors CSV File Read" path="C:\Users\oscarmartinez\Cursos\Mulesoft-Udemy\Udemy-Mulesoft-WorkSpace\ftp-insert-sql-from-csv\sample-read-dir\actors.csv" config-ref="File_Config"/>
 		<ee:transform doc:name="Transform Message" doc:id="b8b30111-4755-4126-b205-e2e69dba3f34" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
